@@ -2,20 +2,28 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.projetopoofinal;
+package com.mycompany.projetopooaluno;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import javax.swing.table.DefaultTableModel;
+import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import javax.swing.RowSorter;
+import javax.swing.SortOrder;
+import javax.swing.table.TableRowSorter;
+import java.util.List;       
+  
+
 
 /**
  *
  * @author CTU
  */
 public class InterfaceAluno extends javax.swing.JFrame {
+
+    
 
     /**
      * Creates new form InterfaceAluno
@@ -39,7 +47,6 @@ public class InterfaceAluno extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         buttonBuscar = new javax.swing.JButton();
         buttonCadastro = new javax.swing.JButton();
-        buttonMostrarTabela = new javax.swing.JButton();
         buttonVelho = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -83,9 +90,12 @@ public class InterfaceAluno extends javax.swing.JFrame {
             }
         });
 
-        buttonMostrarTabela.setText("Mostrar na tabela ");
-
         buttonVelho.setText("Mais velho");
+        buttonVelho.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonVelhoActionPerformed(evt);
+            }
+        });
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -95,14 +105,25 @@ public class InterfaceAluno extends javax.swing.JFrame {
                 "Matricula", "Nome", "Data de nascimento", "Idade", "Telefone", "CPF"
             }
         ));
+        jTable1.setToolTipText("");
         jScrollPane1.setViewportView(jTable1);
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel5.setText("Telefone:");
 
         buttonNovo.setText("Mais Novo");
+        buttonNovo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonNovoActionPerformed(evt);
+            }
+        });
 
         buttonExcluir.setText("Excluir");
+        buttonExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonExcluirActionPerformed(evt);
+            }
+        });
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         jLabel7.setText("   CPF:");
@@ -141,15 +162,13 @@ public class InterfaceAluno extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addComponent(buttonCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(57, 57, 57)
                         .addComponent(buttonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(buttonMostrarTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(63, 63, 63)
                         .addComponent(buttonVelho, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(63, 63, 63)
                         .addComponent(buttonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(45, 45, 45)
                         .addComponent(buttonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 25, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -213,7 +232,6 @@ public class InterfaceAluno extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(buttonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(buttonMostrarTabela, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonVelho, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(buttonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -229,42 +247,63 @@ public class InterfaceAluno extends javax.swing.JFrame {
     }//GEN-LAST:event_textoNomeActionPerformed
 
     private void buttonCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCadastroActionPerformed
+                                             
 
-        
     boolean cadastrado = true;
+
     // Pega os dados dos campos
     String matricula = id.getText();
     String nome = textoNome.getText();
     String dataNascStr = textoDataNasc.getText().trim();
     String telefone = textoTelefone.getText();
     String cpf = textoCPF.getText();
-    
-    //Limpar todos os campos 
+
+    // Verifica se já existe matrícula ou CPF na tabela antes de cadastrar
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    for (int i = 0; i < model.getRowCount(); i++) {
+        String matriculaTabela = model.getValueAt(i, 0).toString();
+        String cpfTabela = model.getValueAt(i, 5).toString();
+
+        // Se matrícula ou CPF já existem, exibe mensagem e interrompe cadastro
+        if (matriculaTabela.equals(matricula)) {
+            JOptionPane.showMessageDialog(this, "Matrícula já cadastrada.");
+            return; // interrompe o cadastro
+        }
+        if (cpfTabela.equals(cpf)) {
+            JOptionPane.showMessageDialog(this, "CPF já cadastrado.");
+            return; // interrompe o cadastro
+        }
+    }
+
+    // Limpa os campos após pegar os dados
     id.setText("");
     textoNome.setText("");
     textoDataNasc.setText("");
     textoTelefone.setText("");
     textoCPF.setText("");
-    
-    //CALCULO DA DATA PARA A TABELA 
+
     try {
-        // Formata a data e calcula a idade
+        // Formata a data de nascimento e calcula idade
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         LocalDate dataNasc = LocalDate.parse(dataNascStr, formatter);
         LocalDate hoje = LocalDate.now();
         int idade = Period.between(dataNasc, hoje).getYears();
 
-        // Adiciona os dados diretamente na tabela, incluindo idade calculada
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        // Adiciona os dados na tabela incluindo a idade calculada
         model.addRow(new Object[] {matricula, nome, dataNascStr, idade, telefone, cpf});
 
     } catch (DateTimeParseException e) {
+        // Caso a data esteja no formato errado, mostra erro
         JOptionPane.showMessageDialog(this, "Data de nascimento inválida. Use o formato dd/MM/yyyy.");
+        return;
     }
-    
-    if(cadastrado==true){
+
+    // Confirmação de cadastro realizado com sucesso
+    if(cadastrado == true){
         JOptionPane.showMessageDialog(this, "O aluno foi cadastrado.");
-    }
+    
+}
+
     }//GEN-LAST:event_buttonCadastroActionPerformed
 
     private void buttonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBuscarActionPerformed
@@ -313,6 +352,68 @@ public class InterfaceAluno extends javax.swing.JFrame {
     janelaBusca.setVisible(true);
     }//GEN-LAST:event_buttonBuscarActionPerformed
 
+    private void buttonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExcluirActionPerformed
+        //mostra uma janela perguntando qual o numero de matricula quer excluir 
+        String matriculaExcluir = JOptionPane.showInputDialog(this,"Digite a matricula do aluno a ser excluido ");
+        
+        if(matriculaExcluir == null ||matriculaExcluir.trim().isEmpty()){
+            JOptionPane.showMessageDialog(this, "Matricula invalida.");
+            return;
+        }
+        
+        
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        boolean encontrado = false;
+        
+        // Percorre todas as linhas da tabela
+        for (int i = 0; i < model.getRowCount(); i++) {
+            // Pega a matrícula da linha atual (coluna 0)
+            String matriculaTabela = model.getValueAt(i, 0).toString();
+            
+            if(matriculaTabela.equals(matriculaExcluir)){
+                model.removeRow(i);//remove a linha da tabela
+                encontrado = true;
+                JOptionPane.showMessageDialog(this, "Aluno removido com sucesso.");
+                break;
+            }
+        }
+        //se nao existir ou não encontrar 
+        if(!encontrado){
+            JOptionPane.showMessageDialog(this, "Matricula não encontrada");
+        }
+        
+    }//GEN-LAST:event_buttonExcluirActionPerformed
+
+    private void buttonVelhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVelhoActionPerformed
+    //cria um organizador de linhas para ordenar as linhas das tabelas     
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    
+    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+    jTable1.setRowSorter(sorter); 
+    
+    //CRIA UMA LISTA DE CHAVES DE ORDENAÇÃO
+    List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+    sortKeys.add(new RowSorter.SortKey(3, SortOrder.DESCENDING)); 
+
+    sorter.setSortKeys(sortKeys);
+    sorter.sort();
+    }//GEN-LAST:event_buttonVelhoActionPerformed
+
+    private void buttonNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNovoActionPerformed
+    //cria um organizador de linhas para ordenar as linhas das tabelas     
+    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+    
+    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+    jTable1.setRowSorter(sorter); 
+    
+    //CRIA UMA LISTA DE CHAVES DE ORDENAÇÃO
+    List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+    sortKeys.add(new RowSorter.SortKey(3, SortOrder.ASCENDING)); 
+
+    sorter.setSortKeys(sortKeys);
+    sorter.sort();
+    }//GEN-LAST:event_buttonNovoActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -352,7 +453,6 @@ public class InterfaceAluno extends javax.swing.JFrame {
     private javax.swing.JButton buttonBuscar;
     private javax.swing.JButton buttonCadastro;
     private javax.swing.JButton buttonExcluir;
-    private javax.swing.JButton buttonMostrarTabela;
     private javax.swing.JButton buttonNovo;
     private javax.swing.JButton buttonVelho;
     private javax.swing.JFormattedTextField id;
@@ -368,4 +468,14 @@ public class InterfaceAluno extends javax.swing.JFrame {
     private javax.swing.JTextField textoNome;
     private javax.swing.JFormattedTextField textoTelefone;
     // End of variables declaration//GEN-END:variables
+
+    private static class JTable1 {
+
+        private static void setRowSorter(TableRowSorter<DefaultTableModel> sorter) {
+            throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+        }
+
+        public JTable1() {
+        }
+    }
 }

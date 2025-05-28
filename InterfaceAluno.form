@@ -29,15 +29,13 @@
                   <Group type="102" attributes="0">
                       <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
                       <Component id="buttonCadastro" min="-2" pref="138" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="57" max="-2" attributes="0"/>
                       <Component id="buttonBuscar" min="-2" pref="138" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="buttonMostrarTabela" min="-2" pref="138" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
                       <Component id="buttonVelho" min="-2" pref="138" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="63" max="-2" attributes="0"/>
                       <Component id="buttonNovo" min="-2" pref="138" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="45" max="-2" attributes="0"/>
                       <Component id="buttonExcluir" min="-2" pref="138" max="-2" attributes="0"/>
                       <EmptySpace min="0" pref="25" max="32767" attributes="0"/>
                   </Group>
@@ -120,7 +118,6 @@
               <Group type="103" groupAlignment="3" attributes="0">
                   <Component id="buttonBuscar" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                   <Component id="buttonCadastro" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
-                  <Component id="buttonMostrarTabela" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                   <Component id="buttonVelho" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                   <Component id="buttonNovo" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
                   <Component id="buttonExcluir" alignment="3" min="-2" pref="32" max="-2" attributes="0"/>
@@ -176,15 +173,13 @@
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonCadastroActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="buttonMostrarTabela">
-      <Properties>
-        <Property name="text" type="java.lang.String" value="Mostrar na tabela "/>
-      </Properties>
-    </Component>
     <Component class="javax.swing.JButton" name="buttonVelho">
       <Properties>
         <Property name="text" type="java.lang.String" value="Mais velho"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonVelhoActionPerformed"/>
+      </Events>
     </Component>
     <Container class="javax.swing.JScrollPane" name="jScrollPane1">
       <AuxValues>
@@ -205,6 +200,7 @@
                 <Column editable="true" title="CPF" type="java.lang.Object"/>
               </Table>
             </Property>
+            <Property name="toolTipText" type="java.lang.String" value=""/>
             <Property name="columnModel" type="javax.swing.table.TableColumnModel" editor="org.netbeans.modules.form.editors2.TableColumnModelEditor">
               <TableColumnModel selectionModel="0">
                 <Column maxWidth="-1" minWidth="-1" prefWidth="-1" resizable="true">
@@ -258,11 +254,17 @@
       <Properties>
         <Property name="text" type="java.lang.String" value="Mais Novo"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonNovoActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JButton" name="buttonExcluir">
       <Properties>
         <Property name="text" type="java.lang.String" value="Excluir"/>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="buttonExcluirActionPerformed"/>
+      </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel7">
       <Properties>
