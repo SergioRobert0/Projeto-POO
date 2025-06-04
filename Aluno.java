@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package com.mycompany.projetopoofinal;
+package projetoalunopootest;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -78,7 +78,7 @@ public class Aluno {
         }
     }
     
-    //SALVA EM UM DOCUMENTO .TXT 
+    /**SALVA EM UM DOCUMENTO .TXT      INVALIDOOOOOOOOOOOOO
     public String salvar(){
         
         try{
@@ -98,6 +98,6 @@ public class Aluno {
             Logger.getLogger(Aluno.class.getName()).log(Level.SEVERE,null,ex);
         }
         return null;
-    }
+    }*/
 }
 

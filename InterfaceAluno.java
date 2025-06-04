@@ -2,7 +2,14 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package com.mycompany.projetopooaluno;
+package projetoalunopootest;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.sql.Statement;
 import javax.swing.table.DefaultTableModel;
 import java.time.LocalDate;
 import java.time.Period;
@@ -14,6 +21,12 @@ import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableRowSorter;
 import java.util.List;       
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.sql.PreparedStatement;
+
   
 
 
@@ -41,19 +54,19 @@ public class InterfaceAluno extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
+        lblDtNasc = new javax.swing.JLabel();
+        lblMatricula = new javax.swing.JLabel();
         textoNome = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
+        lblNome = new javax.swing.JLabel();
         buttonBuscar = new javax.swing.JButton();
         buttonCadastro = new javax.swing.JButton();
         buttonVelho = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
-        jLabel5 = new javax.swing.JLabel();
+        lblTelefone = new javax.swing.JLabel();
         buttonNovo = new javax.swing.JButton();
         buttonExcluir = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
+        lblCPF = new javax.swing.JLabel();
         textoDataNasc = new javax.swing.JFormattedTextField();
         textoTelefone = new javax.swing.JFormattedTextField();
         textoCPF = new javax.swing.JFormattedTextField();
@@ -61,11 +74,11 @@ public class InterfaceAluno extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel2.setText("Dt. nascimento:");
+        lblDtNasc.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblDtNasc.setText("Dt. nascimento:");
 
-        jLabel3.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel3.setText("Matricula:");
+        lblMatricula.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMatricula.setText("Matricula:");
 
         textoNome.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -73,8 +86,8 @@ public class InterfaceAluno extends javax.swing.JFrame {
             }
         });
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel4.setText("Nome:");
+        lblNome.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblNome.setText("Nome:");
 
         buttonBuscar.setText("Buscar");
         buttonBuscar.addActionListener(new java.awt.event.ActionListener() {
@@ -108,8 +121,8 @@ public class InterfaceAluno extends javax.swing.JFrame {
         jTable1.setToolTipText("");
         jScrollPane1.setViewportView(jTable1);
 
-        jLabel5.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel5.setText("Telefone:");
+        lblTelefone.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblTelefone.setText("Telefone:");
 
         buttonNovo.setText("Mais Novo");
         buttonNovo.addActionListener(new java.awt.event.ActionListener() {
@@ -125,8 +138,8 @@ public class InterfaceAluno extends javax.swing.JFrame {
             }
         });
 
-        jLabel7.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        jLabel7.setText("   CPF:");
+        lblCPF.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblCPF.setText("   CPF:");
 
         try {
             textoDataNasc.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##/##/####")));
@@ -157,76 +170,74 @@ public class InterfaceAluno extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(buttonCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(57, 57, 57)
-                        .addComponent(buttonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(63, 63, 63)
-                        .addComponent(buttonVelho, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(63, 63, 63)
-                        .addComponent(buttonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(45, 45, 45)
-                        .addComponent(buttonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 25, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addGap(40, 40, 40)
+                .addComponent(buttonCadastro, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(buttonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 40, Short.MAX_VALUE)
+                .addComponent(buttonVelho, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(buttonNovo, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40)
+                .addComponent(buttonExcluir, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(40, 40, 40))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addComponent(lblTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textoCPF))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
                         .addComponent(textoTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(textoDataNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(textoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap(709, Short.MAX_VALUE))
+                        .addComponent(lblMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                            .addComponent(lblDtNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(textoDataNasc))
+                        .addGroup(layout.createSequentialGroup()
+                            .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(textoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(textoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(681, Short.MAX_VALUE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDtNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(textoDataNasc)
                         .addGap(2, 2, 2)))
-                .addGap(1, 1, 1)
+                .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addComponent(lblTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                    .addComponent(lblCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(textoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -247,7 +258,35 @@ public class InterfaceAluno extends javax.swing.JFrame {
     }//GEN-LAST:event_textoNomeActionPerformed
 
     private void buttonCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCadastroActionPerformed
-                                             
+    try {
+        //cria uma variável que se conecta com o banco de dados.    
+        Connection con;
+        Statement st;
+        Class.forName("com.mysql.jdbc.Driver");
+        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle", "root", "");
+        st = con.createStatement();
+
+        // Conversão da data (aceitando e ajustando datas inválidas)
+        String dataBr = textoDataNasc.getText(); // Ex: "32/01/2022"
+        SimpleDateFormat formatoBr = new SimpleDateFormat("dd/MM/yyyy");
+        // NÃO usamos setLenient(false), então aceita datas como "32/01/2022"
+        Date dataConvertida = formatoBr.parse(dataBr);
+
+        SimpleDateFormat formatoMySQL = new SimpleDateFormat("yyyy-MM-dd");
+        String dataFormatada = formatoMySQL.format(dataConvertida); // Ex: "2022-02-01"
+
+        String sql = "INSERT INTO aluno VALUES('" + id.getText() + "', '" + textoNome.getText() + "', '" + dataFormatada + "', '" + textoTelefone.getText() + "', '" + textoCPF.getText() + "')";
+        st.executeUpdate(sql);
+
+        JOptionPane.showMessageDialog(null, "Dados inseridos com sucesso");
+    } catch (ClassNotFoundException ex) {
+        JOptionPane.showMessageDialog(null, "Erro no driver: " + ex.getMessage());
+    } catch (SQLException ex) {
+        JOptionPane.showMessageDialog(null, "Erro na conexão: " + ex.getMessage());
+    } catch (Exception ex) {
+        JOptionPane.showMessageDialog(null, "Erro ao converter a data: " + ex.getMessage());
+    
+    }                                         
 
     boolean cadastrado = true;
 
@@ -310,78 +349,99 @@ public class InterfaceAluno extends javax.swing.JFrame {
         
     // Abre a janelinha para digitar a matrícula
     JanelaBuscaMatricula janelaBusca = new JanelaBuscaMatricula(this, matricula -> {
-        // Pegamos o modelo da tabela para buscar os dados
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        boolean encontrado = false; // flag para saber se achou
+        try {
+            // Conexão com o banco
+            Connection con;
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle", "root", "");
 
-        // Percorre todas as linhas da tabela
-        for (int i = 0; i < model.getRowCount(); i++) {
-            // Pega a matrícula da linha atual (coluna 0)
-            String mat = model.getValueAt(i, 0).toString();
+            // Consulta SQL com matrícula
+            String sql = "SELECT * FROM aluno WHERE matricula = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setString(1, matricula);
 
-            // Compara com a matrícula digitada
-            if (mat.equals(matricula)) {
-                // Pega os outros dados do aluno
-                String nome = model.getValueAt(i, 1).toString();
-                String dataNasc = model.getValueAt(i, 2).toString();
-                String idade = model.getValueAt(i, 3).toString();
-                String telefone = model.getValueAt(i, 4).toString();
-                String cpf = model.getValueAt(i, 5).toString();
+            // Executa a consulta
+            java.sql.ResultSet rs = pst.executeQuery();
 
-                // Exibe os dados em um JOptionPane
+            // Verifica se encontrou o aluno
+            if (rs.next()) {
+                String nome = rs.getString("nome");
+                String dataNasc = rs.getString("dataNascimento");
+                String telefone = rs.getString("telefone");
+                String cpf = rs.getString("cpf");
+
+                // Converte data para calcular idade
+                LocalDate dataNascLocal = LocalDate.parse(dataNasc);
+                int idade = Period.between(dataNascLocal, LocalDate.now()).getYears();
+
+                // Exibe os dados
                 JOptionPane.showMessageDialog(this,
                         "Aluno encontrado:\n"
                         + "Nome: " + nome + "\n"
-                        + "Nascimento: " + dataNasc + "\n"
+                        + "Nascimento: " + DateTimeFormatter.ofPattern("dd/MM/yyyy").format(dataNascLocal) + "\n"
                         + "Idade: " + idade + "\n"
                         + "Telefone: " + telefone + "\n"
                         + "CPF: " + cpf);
-
-                encontrado = true;
-                break; // sai do loop
+            } else {
+                JOptionPane.showMessageDialog(this, "Nenhum aluno com essa matrícula foi encontrado.");
             }
-        }
 
-        // Se não achou, avisa o usuário
-        if (!encontrado) {
-            JOptionPane.showMessageDialog(this, "Nenhum aluno com essa matrícula foi encontrado.");
+            // Fecha recursos
+            rs.close();
+            pst.close();
+            con.close();
+
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao buscar aluno: " + ex.getMessage());
         }
     });
 
-    // Mostra a janelinha
     janelaBusca.setVisible(true);
     }//GEN-LAST:event_buttonBuscarActionPerformed
 
+    // Método acionado quando o botão "Excluir" for clicado
     private void buttonExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonExcluirActionPerformed
-        //mostra uma janela perguntando qual o numero de matricula quer excluir 
-        String matriculaExcluir = JOptionPane.showInputDialog(this,"Digite a matricula do aluno a ser excluido ");
-        
-        if(matriculaExcluir == null ||matriculaExcluir.trim().isEmpty()){
-            JOptionPane.showMessageDialog(this, "Matricula invalida.");
-            return;
-        }
-        
-        
-        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-        boolean encontrado = false;
-        
-        // Percorre todas as linhas da tabela
-        for (int i = 0; i < model.getRowCount(); i++) {
-            // Pega a matrícula da linha atual (coluna 0)
-            String matriculaTabela = model.getValueAt(i, 0).toString();
-            
-            if(matriculaTabela.equals(matriculaExcluir)){
-                model.removeRow(i);//remove a linha da tabela
-                encontrado = true;
+        // Abre uma caixa de diálogo para o usuário digitar a matrícula do aluno a ser excluído
+        String matriculaExcluir = JOptionPane.showInputDialog(this, "Digite a matrícula do aluno a ser excluído:");
+
+    // Verifica se o campo está vazio ou o usuário cancelou    
+    if (matriculaExcluir == null || matriculaExcluir.trim().isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Matrícula inválida.");
+        return; // Encerra o método
+    }
+
+     // Carrega o driver JDBC para conexão com o MySQL (necessário apenas uma vez no programa)
+    try {
+        // Usa try-with-resources para fechar conexão e statement automaticamente
+        Class.forName("com.mysql.cj.jdbc.Driver");
+
+        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle", "root", "");
+             PreparedStatement stmt = con.prepareStatement("DELETE FROM aluno WHERE matricula = ?")) {
+
+            stmt.setString(1, matriculaExcluir);
+
+            int linhasAfetadas = stmt.executeUpdate();
+
+            if (linhasAfetadas > 0) {
+                // Remove da JTable
+                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                for (int i = 0; i < model.getRowCount(); i++) {
+                    String matriculaTabela = model.getValueAt(i, 0).toString();
+                    if (matriculaTabela.equals(matriculaExcluir)) {
+                        model.removeRow(i);
+                        break;
+                    }
+                }
                 JOptionPane.showMessageDialog(this, "Aluno removido com sucesso.");
-                break;
+            } else {
+                JOptionPane.showMessageDialog(this, "Matrícula não encontrada no banco de dados.");
             }
         }
-        //se nao existir ou não encontrar 
-        if(!encontrado){
-            JOptionPane.showMessageDialog(this, "Matricula não encontrada");
-        }
-        
+
+    } catch (ClassNotFoundException | SQLException e) {
+        JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage());
+    }
+    
     }//GEN-LAST:event_buttonExcluirActionPerformed
 
     private void buttonVelhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVelhoActionPerformed
@@ -456,13 +516,13 @@ public class InterfaceAluno extends javax.swing.JFrame {
     private javax.swing.JButton buttonNovo;
     private javax.swing.JButton buttonVelho;
     private javax.swing.JFormattedTextField id;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
+    private javax.swing.JLabel lblCPF;
+    private javax.swing.JLabel lblDtNasc;
+    private javax.swing.JLabel lblMatricula;
+    private javax.swing.JLabel lblNome;
+    private javax.swing.JLabel lblTelefone;
     private javax.swing.JFormattedTextField textoCPF;
     private javax.swing.JFormattedTextField textoDataNasc;
     private javax.swing.JTextField textoNome;
