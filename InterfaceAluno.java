@@ -2,41 +2,43 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package projetoalunopootest;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+package trabalhopoo;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
-import javax.swing.table.DefaultTableModel;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import java.util.ArrayList;
-import javax.swing.JOptionPane;
+
 import javax.swing.RowSorter;
 import javax.swing.SortOrder;
 import javax.swing.table.TableRowSorter;
-import java.util.List;       
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.sql.PreparedStatement;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
-  
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.time.Period;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.sql.ResultSet;
+import java.text.ParseException;
+import javax.swing.JButton;
 
 /**
  *
  * @author CTU
  */
 public class InterfaceAluno extends javax.swing.JFrame {
-
-    
 
     /**
      * Creates new form InterfaceAluno
@@ -71,6 +73,13 @@ public class InterfaceAluno extends javax.swing.JFrame {
         textoTelefone = new javax.swing.JFormattedTextField();
         textoCPF = new javax.swing.JFormattedTextField();
         id = new javax.swing.JFormattedTextField();
+        campoIndice = new javax.swing.JFormattedTextField();
+        jLabel1 = new javax.swing.JLabel();
+        lblMatricula1 = new javax.swing.JLabel();
+        exportarTabela = new javax.swing.JButton();
+        lblMatricula2 = new javax.swing.JLabel();
+        mostrarTodos = new javax.swing.JButton();
+        buttonAtualizar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -164,6 +173,40 @@ public class InterfaceAluno extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        id.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                idActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Índice");
+
+        lblMatricula1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMatricula1.setText("Todos os Cadastros :");
+
+        exportarTabela.setText("Exportar");
+        exportarTabela.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportarTabelaActionPerformed(evt);
+            }
+        });
+
+        lblMatricula2.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblMatricula2.setText("Exportar CSV:");
+
+        mostrarTodos.setText("Cadastros");
+        mostrarTodos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mostrarTodosActionPerformed(evt);
+            }
+        });
+
+        buttonAtualizar.setText("Atualizar no Banco");
+        buttonAtualizar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonAtualizarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -188,25 +231,43 @@ public class InterfaceAluno extends javax.swing.JFrame {
                         .addGap(6, 6, 6)
                         .addComponent(lblTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textoTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(textoTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(681, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                            .addComponent(lblDtNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(textoDataNasc))
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(textoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(74, 74, 74)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(campoIndice, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblMatricula2, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(exportarTabela)
+                        .addGap(133, 133, 133))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                                .addComponent(lblDtNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textoDataNasc))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(textoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 118, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblMatricula1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(mostrarTodos)
+                        .addGap(127, 127, 127))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(lblCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(textoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(681, Short.MAX_VALUE))
+                        .addComponent(textoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(buttonAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 139, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(65, 65, 65))))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jScrollPane1)
@@ -218,26 +279,42 @@ public class InterfaceAluno extends javax.swing.JFrame {
                 .addGap(26, 26, 26)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblMatricula, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(textoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblDtNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(id, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(campoIndice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(exportarTabela)
+                    .addComponent(lblMatricula2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(textoDataNasc)
-                        .addGap(2, 2, 2)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(textoNome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblNome, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(lblDtNasc, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(textoDataNasc)
+                                .addGap(2, 2, 2))))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblMatricula1, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(mostrarTodos))))
                 .addGap(28, 28, 28)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(textoTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(textoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 47, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textoCPF, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(34, 34, 34)
+                        .addComponent(buttonAtualizar, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 310, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -258,145 +335,176 @@ public class InterfaceAluno extends javax.swing.JFrame {
     }//GEN-LAST:event_textoNomeActionPerformed
 
     private void buttonCadastroActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonCadastroActionPerformed
-    try {
-        //cria uma variável que se conecta com o banco de dados.    
-        Connection con;
-        Statement st;
-        Class.forName("com.mysql.jdbc.Driver");
-        con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle", "root", "");
-        st = con.createStatement();
+        try {
+            //cria uma variável que se conecta com o banco de dados.    
+            Connection con;
+            Statement st;
+            Class.forName("com.mysql.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle", "root", "Sergio_robert01234.");
+            st = con.createStatement();
 
-        // Conversão da data (aceitando e ajustando datas inválidas)
-        String dataBr = textoDataNasc.getText(); // Ex: "32/01/2022"
-        SimpleDateFormat formatoBr = new SimpleDateFormat("dd/MM/yyyy");
-        // NÃO usamos setLenient(false), então aceita datas como "32/01/2022"
-        Date dataConvertida = formatoBr.parse(dataBr);
+            // Conversão da data (aceitando e ajustando datas inválidas)
+            String dataBr = textoDataNasc.getText(); // Ex: "32/01/2022"
+            SimpleDateFormat formatoBr = new SimpleDateFormat("dd/MM/yyyy");
+            // NÃO usamos setLenient(false), então aceita datas como "32/01/2022"
+            Date dataConvertida = formatoBr.parse(dataBr);
 
-        SimpleDateFormat formatoMySQL = new SimpleDateFormat("yyyy-MM-dd");
-        String dataFormatada = formatoMySQL.format(dataConvertida); // Ex: "2022-02-01"
+            SimpleDateFormat formatoMySQL = new SimpleDateFormat("yyyy-MM-dd");
+            String dataFormatada = formatoMySQL.format(dataConvertida); // Ex: "2022-02-01"
 
-        String sql = "INSERT INTO aluno VALUES('" + id.getText() + "', '" + textoNome.getText() + "', '" + dataFormatada + "', '" + textoTelefone.getText() + "', '" + textoCPF.getText() + "')";
-        st.executeUpdate(sql);
+            String sql = "INSERT INTO aluno VALUES('" + id.getText() + "', '" + textoNome.getText() + "', '" + dataFormatada + "', '" + textoTelefone.getText() + "', '" + textoCPF.getText() + "')";
+            st.executeUpdate(sql);
 
-        JOptionPane.showMessageDialog(null, "Dados inseridos com sucesso");
-    } catch (ClassNotFoundException ex) {
-        JOptionPane.showMessageDialog(null, "Erro no driver: " + ex.getMessage());
-    } catch (SQLException ex) {
-        JOptionPane.showMessageDialog(null, "Erro na conexão: " + ex.getMessage());
-    } catch (Exception ex) {
-        JOptionPane.showMessageDialog(null, "Erro ao converter a data: " + ex.getMessage());
-    
-    }                                         
+            JOptionPane.showMessageDialog(null, "Dados inseridos com sucesso");
+        } catch (ClassNotFoundException ex) {
+            JOptionPane.showMessageDialog(null, "Erro no driver: " + ex.getMessage());
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Erro na conexão: " + ex.getMessage());
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(null, "Erro ao converter a data: " + ex.getMessage());
 
-    boolean cadastrado = true;
-
-    // Pega os dados dos campos
-    String matricula = id.getText();
-    String nome = textoNome.getText();
-    String dataNascStr = textoDataNasc.getText().trim();
-    String telefone = textoTelefone.getText();
-    String cpf = textoCPF.getText();
-
-    // Verifica se já existe matrícula ou CPF na tabela antes de cadastrar
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-    for (int i = 0; i < model.getRowCount(); i++) {
-        String matriculaTabela = model.getValueAt(i, 0).toString();
-        String cpfTabela = model.getValueAt(i, 5).toString();
-
-        // Se matrícula ou CPF já existem, exibe mensagem e interrompe cadastro
-        if (matriculaTabela.equals(matricula)) {
-            JOptionPane.showMessageDialog(this, "Matrícula já cadastrada.");
-            return; // interrompe o cadastro
         }
-        if (cpfTabela.equals(cpf)) {
-            JOptionPane.showMessageDialog(this, "CPF já cadastrado.");
-            return; // interrompe o cadastro
+
+        boolean cadastrado = true;
+
+        String matricula = id.getText();
+        String nome = textoNome.getText();
+        String dataNascStr = textoDataNasc.getText().trim();
+        String telefone = textoTelefone.getText();
+        String cpf = textoCPF.getText();
+        String indiceStr = campoIndice.getText().trim(); // campo opcional de índice
+
+// Verificação obrigatória de campos principais
+        if (matricula.isEmpty() || nome.isEmpty() || dataNascStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preencha matrícula, nome e data de nascimento.");
+            return;
         }
-    }
 
-    // Limpa os campos após pegar os dados
-    id.setText("");
-    textoNome.setText("");
-    textoDataNasc.setText("");
-    textoTelefone.setText("");
-    textoCPF.setText("");
+// Verifica se já existe matrícula ou CPF na tabela antes de cadastrar
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String matriculaTabela = model.getValueAt(i, 0).toString();
+            String cpfTabela = model.getValueAt(i, 5).toString();
 
-    try {
-        // Formata a data de nascimento e calcula idade
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        LocalDate dataNasc = LocalDate.parse(dataNascStr, formatter);
-        LocalDate hoje = LocalDate.now();
-        int idade = Period.between(dataNasc, hoje).getYears();
+            if (matriculaTabela.equals(matricula)) {
+                JOptionPane.showMessageDialog(this, "Matrícula já cadastrada.");
+                return;
+            }
+            if (cpfTabela.equals(cpf)) {
+                JOptionPane.showMessageDialog(this, "CPF já cadastrado.");
+                return;
+            }
+        }
 
-        // Adiciona os dados na tabela incluindo a idade calculada
-        model.addRow(new Object[] {matricula, nome, dataNascStr, idade, telefone, cpf});
+        try {
+            // Formata a data de nascimento e calcula idade
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            LocalDate dataNasc = LocalDate.parse(dataNascStr, formatter);
+            LocalDate hoje = LocalDate.now();
+            int idade = Period.between(dataNasc, hoje).getYears();
 
-    } catch (DateTimeParseException e) {
-        // Caso a data esteja no formato errado, mostra erro
-        JOptionPane.showMessageDialog(this, "Data de nascimento inválida. Use o formato dd/MM/yyyy.");
-        return;
-    }
+            Object[] novaLinha = new Object[]{matricula, nome, dataNascStr, idade, telefone, cpf};
 
-    // Confirmação de cadastro realizado com sucesso
-    if(cadastrado == true){
-        JOptionPane.showMessageDialog(this, "O aluno foi cadastrado.");
-    
-}
+            if (!indiceStr.isEmpty()) {
+                try {
+                    int indice = Integer.parseInt(indiceStr);
 
+                    if (indice >= 0 && indice <= model.getRowCount()) {
+                        model.insertRow(indice, novaLinha);
+                        JOptionPane.showMessageDialog(this, "Aluno inserido no índice " + indice + ".");
+                    } else {
+                        JOptionPane.showMessageDialog(this, "Índice inválido. Insira um valor entre 0 e " + model.getRowCount());
+                        return;
+                    }
+                } catch (NumberFormatException ex) {
+                    JOptionPane.showMessageDialog(this, "Índice inválido. Digite um número inteiro.");
+                    return;
+                }
+            } else {
+                model.addRow(novaLinha);
+                JOptionPane.showMessageDialog(this, "Aluno cadastrado com sucesso.");
+            }
+
+            // Limpa os campos após cadastro
+            id.setText("");
+            textoNome.setText("");
+            textoDataNasc.setText("");
+            textoTelefone.setText("");
+            textoCPF.setText("");
+            campoIndice.setText("");
+
+        } catch (DateTimeParseException e) {
+            JOptionPane.showMessageDialog(this, "Data de nascimento inválida. Use o formato dd/MM/yyyy.");
+        }
+
+        List<Aluno> listaAlunos = new ArrayList<>();
+
+        Aluno novoAluno = new Aluno(matricula, nome, dataNascStr, telefone, cpf);
+
+        listaAlunos.add(novoAluno);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("ListagemAlunos.txt"))) {
+            for (Aluno a : listaAlunos) {
+                writer.write(a.toCSV());
+                writer.newLine();
+            }
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao salvar no arquivo: " + ex.getMessage());
+        }
     }//GEN-LAST:event_buttonCadastroActionPerformed
 
     private void buttonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBuscarActionPerformed
-        
-    // Abre a janelinha para digitar a matrícula
-    JanelaBuscaMatricula janelaBusca = new JanelaBuscaMatricula(this, matricula -> {
-        try {
-            // Conexão com o banco
-            Connection con;
-            Class.forName("com.mysql.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle", "root", "");
 
-            // Consulta SQL com matrícula
-            String sql = "SELECT * FROM aluno WHERE matricula = ?";
-            PreparedStatement pst = con.prepareStatement(sql);
-            pst.setString(1, matricula);
+        // Abre a janelinha para digitar a matrícula
+        JanelaBuscaMatricula janelaBusca = new JanelaBuscaMatricula(this, matricula -> {
+            try {
+                // Conexão com o banco
+                Connection con;
+                Class.forName("com.mysql.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle", "root", "Sergio_robert01234.");
 
-            // Executa a consulta
-            java.sql.ResultSet rs = pst.executeQuery();
+                // Consulta SQL com matrícula
+                String sql = "SELECT * FROM aluno WHERE matricula = ?";
+                PreparedStatement pst = con.prepareStatement(sql);
+                pst.setString(1, matricula);
 
-            // Verifica se encontrou o aluno
-            if (rs.next()) {
-                String nome = rs.getString("nome");
-                String dataNasc = rs.getString("dataNascimento");
-                String telefone = rs.getString("telefone");
-                String cpf = rs.getString("cpf");
+                // Executa a consulta
+                java.sql.ResultSet rs = pst.executeQuery();
 
-                // Converte data para calcular idade
-                LocalDate dataNascLocal = LocalDate.parse(dataNasc);
-                int idade = Period.between(dataNascLocal, LocalDate.now()).getYears();
+                // Verifica se encontrou o aluno
+                if (rs.next()) {
+                    String nome = rs.getString("nome");
+                    String dataNasc = rs.getString("dataNascimento");
+                    String telefone = rs.getString("telefone");
+                    String cpf = rs.getString("cpf");
 
-                // Exibe os dados
-                JOptionPane.showMessageDialog(this,
-                        "Aluno encontrado:\n"
-                        + "Nome: " + nome + "\n"
-                        + "Nascimento: " + DateTimeFormatter.ofPattern("dd/MM/yyyy").format(dataNascLocal) + "\n"
-                        + "Idade: " + idade + "\n"
-                        + "Telefone: " + telefone + "\n"
-                        + "CPF: " + cpf);
-            } else {
-                JOptionPane.showMessageDialog(this, "Nenhum aluno com essa matrícula foi encontrado.");
+                    // Converte data para calcular idade
+                    LocalDate dataNascLocal = LocalDate.parse(dataNasc);
+                    int idade = Period.between(dataNascLocal, LocalDate.now()).getYears();
+
+                    // Exibe os dados
+                    JOptionPane.showMessageDialog(this,
+                            "Aluno encontrado:\n"
+                            + "Nome: " + nome + "\n"
+                            + "Nascimento: " + DateTimeFormatter.ofPattern("dd/MM/yyyy").format(dataNascLocal) + "\n"
+                            + "Idade: " + idade + "\n"
+                            + "Telefone: " + telefone + "\n"
+                            + "CPF: " + cpf);
+                } else {
+                    JOptionPane.showMessageDialog(this, "Nenhum aluno com essa matrícula foi encontrado.");
+                }
+
+                // Fecha recursos
+                rs.close();
+                pst.close();
+                con.close();
+
+            } catch (ClassNotFoundException | SQLException ex) {
+                JOptionPane.showMessageDialog(this, "Erro ao buscar aluno: " + ex.getMessage());
             }
+        });
 
-            // Fecha recursos
-            rs.close();
-            pst.close();
-            con.close();
-
-        } catch (ClassNotFoundException | SQLException ex) {
-            JOptionPane.showMessageDialog(this, "Erro ao buscar aluno: " + ex.getMessage());
-        }
-    });
-
-    janelaBusca.setVisible(true);
+        janelaBusca.setVisible(true);
     }//GEN-LAST:event_buttonBuscarActionPerformed
 
     // Método acionado quando o botão "Excluir" for clicado
@@ -404,75 +512,269 @@ public class InterfaceAluno extends javax.swing.JFrame {
         // Abre uma caixa de diálogo para o usuário digitar a matrícula do aluno a ser excluído
         String matriculaExcluir = JOptionPane.showInputDialog(this, "Digite a matrícula do aluno a ser excluído:");
 
-    // Verifica se o campo está vazio ou o usuário cancelou    
-    if (matriculaExcluir == null || matriculaExcluir.trim().isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Matrícula inválida.");
-        return; // Encerra o método
-    }
-
-     // Carrega o driver JDBC para conexão com o MySQL (necessário apenas uma vez no programa)
-    try {
-        // Usa try-with-resources para fechar conexão e statement automaticamente
-        Class.forName("com.mysql.cj.jdbc.Driver");
-
-        try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle", "root", "");
-             PreparedStatement stmt = con.prepareStatement("DELETE FROM aluno WHERE matricula = ?")) {
-
-            stmt.setString(1, matriculaExcluir);
-
-            int linhasAfetadas = stmt.executeUpdate();
-
-            if (linhasAfetadas > 0) {
-                // Remove da JTable
-                DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-                for (int i = 0; i < model.getRowCount(); i++) {
-                    String matriculaTabela = model.getValueAt(i, 0).toString();
-                    if (matriculaTabela.equals(matriculaExcluir)) {
-                        model.removeRow(i);
-                        break;
-                    }
-                }
-                JOptionPane.showMessageDialog(this, "Aluno removido com sucesso.");
-            } else {
-                JOptionPane.showMessageDialog(this, "Matrícula não encontrada no banco de dados.");
-            }
+        // Verifica se o campo está vazio ou o usuário cancelou    
+        if (matriculaExcluir == null || matriculaExcluir.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Matrícula inválida.");
+            return; // Encerra o método
         }
 
-    } catch (ClassNotFoundException | SQLException e) {
-        JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage());
-    }
-    
+        // Carrega o driver JDBC para conexão com o MySQL (necessário apenas uma vez no programa)
+        try {
+            // Usa try-with-resources para fechar conexão e statement automaticamente
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            try (Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle", "root", "Sergio_robert01234."); PreparedStatement stmt = con.prepareStatement("DELETE FROM aluno WHERE matricula = ?")) {
+
+                stmt.setString(1, matriculaExcluir);
+
+                int linhasAfetadas = stmt.executeUpdate();
+
+                if (linhasAfetadas > 0) {
+                    // Remove da JTable
+                    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+                    for (int i = 0; i < model.getRowCount(); i++) {
+                        String matriculaTabela = model.getValueAt(i, 0).toString();
+                        if (matriculaTabela.equals(matriculaExcluir)) {
+                            model.removeRow(i);
+                            break;
+                        }
+                    }
+                    JOptionPane.showMessageDialog(this, "Aluno removido com sucesso.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "Matrícula não encontrada no banco de dados.");
+                }
+            }
+
+        } catch (ClassNotFoundException | SQLException e) {
+            JOptionPane.showMessageDialog(this, "Erro: " + e.getMessage());
+        }
+
     }//GEN-LAST:event_buttonExcluirActionPerformed
 
     private void buttonVelhoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonVelhoActionPerformed
-    //cria um organizador de linhas para ordenar as linhas das tabelas     
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-    
-    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-    jTable1.setRowSorter(sorter); 
-    
-    //CRIA UMA LISTA DE CHAVES DE ORDENAÇÃO
-    List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-    sortKeys.add(new RowSorter.SortKey(3, SortOrder.DESCENDING)); 
+        //cria um organizador de linhas para ordenar as linhas das tabelas     
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
-    sorter.setSortKeys(sortKeys);
-    sorter.sort();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable1.setRowSorter(sorter);
+
+        //CRIA UMA LISTA DE CHAVES DE ORDENAÇÃO
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        sortKeys.add(new RowSorter.SortKey(3, SortOrder.DESCENDING));
+
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
     }//GEN-LAST:event_buttonVelhoActionPerformed
 
     private void buttonNovoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonNovoActionPerformed
-    //cria um organizador de linhas para ordenar as linhas das tabelas     
-    DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
-    
-    TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
-    jTable1.setRowSorter(sorter); 
-    
-    //CRIA UMA LISTA DE CHAVES DE ORDENAÇÃO
-    List<RowSorter.SortKey> sortKeys = new ArrayList<>();
-    sortKeys.add(new RowSorter.SortKey(3, SortOrder.ASCENDING)); 
+        //cria um organizador de linhas para ordenar as linhas das tabelas     
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
 
-    sorter.setSortKeys(sortKeys);
-    sorter.sort();
+        TableRowSorter<DefaultTableModel> sorter = new TableRowSorter<>(model);
+        jTable1.setRowSorter(sorter);
+
+        //CRIA UMA LISTA DE CHAVES DE ORDENAÇÃO
+        List<RowSorter.SortKey> sortKeys = new ArrayList<>();
+        sortKeys.add(new RowSorter.SortKey(3, SortOrder.ASCENDING));
+
+        sorter.setSortKeys(sortKeys);
+        sorter.sort();
     }//GEN-LAST:event_buttonNovoActionPerformed
+
+    private void exportarTabelaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportarTabelaActionPerformed
+
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter("ListagemAlunos.txt"))) {
+            for (int i = 0; i < model.getRowCount(); i++) {
+                String matricula = model.getValueAt(i, 0).toString();
+                String nome = model.getValueAt(i, 1).toString();
+                String idade = model.getValueAt(i, 3).toString();
+                String dataNasc = model.getValueAt(i, 2).toString();
+                String telefone = model.getValueAt(i, 4).toString();
+                String cpf = model.getValueAt(i, 5).toString();
+
+                String linhaCSV = matricula + ", " + nome + " ;" + idade + ";" + dataNasc + "; " + telefone + ";" + cpf;
+                writer.write(linhaCSV);
+                writer.newLine();
+            }
+
+            JOptionPane.showMessageDialog(this, "Tabela exportada com sucesso para ListagemAlunos.txt");
+
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Erro ao exportar a tabela: " + e.getMessage());
+        }
+
+
+    }//GEN-LAST:event_exportarTabelaActionPerformed
+
+    private void mostrarTodosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mostrarTodosActionPerformed
+
+        String url = "jdbc:mysql://localhost:3306/controle";
+        String user = "root";
+        String password = "Sergio_robert01234.";
+
+        String query = "SELECT matricula, nome, dataNascimento, telefone, cpf FROM aluno";
+
+        StringBuilder builder = new StringBuilder();
+
+        try (Connection con = DriverManager.getConnection(url, user, password); PreparedStatement stmt = con.prepareStatement(query); ResultSet rs = stmt.executeQuery()) {
+
+            while (rs.next()) {
+                String matricula = rs.getString("matricula");
+                String nome = rs.getString("nome");
+                String dataNasc = rs.getString("dataNascimento");
+                String telefone = rs.getString("telefone");
+                String cpf = rs.getString("cpf");
+
+                // Aqui você pode calcular a idade se quiser, ou deixá-la fora
+                builder.append(matricula)
+                        .append(", ").append(nome)
+                        .append(";").append(dataNasc)
+                        .append("; ").append(telefone)
+                        .append(";").append(cpf)
+                        .append("\n");
+            }
+
+            if (builder.length() == 0) {
+                JOptionPane.showMessageDialog(this, "Nenhum aluno encontrado.");
+            } else {
+                JOptionPane.showMessageDialog(this, builder.toString(), "Alunos no Banco", JOptionPane.INFORMATION_MESSAGE);
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Erro ao acessar o banco: " + e.getMessage());
+        }
+
+
+    }//GEN-LAST:event_mostrarTodosActionPerformed
+
+    private void buttonAtualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonAtualizarActionPerformed
+
+        //////////////
+
+        
+    String matricula = id.getText(); // NÃO será modificada
+        String nome = textoNome.getText();
+        String dataNascStr = textoDataNasc.getText().trim();
+        String telefone = textoTelefone.getText();
+        String cpf = textoCPF.getText();
+
+        if (matricula.isEmpty() || nome.isEmpty() || dataNascStr.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Preencha matrícula, nome e data de nascimento.");
+            return;
+        }
+
+        try {
+            // Converte data para formato MySQL
+            SimpleDateFormat formatoBr = new SimpleDateFormat("dd/MM/yyyy");
+            Date dataConvertida = formatoBr.parse(dataNascStr);
+            SimpleDateFormat formatoMySQL = new SimpleDateFormat("yyyy-MM-dd");
+            String dataFormatada = formatoMySQL.format(dataConvertida);
+
+            // Atualiza no banco
+            Class.forName("com.mysql.jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/controle", "root", "Sergio_robert01234.");
+            String sql = "UPDATE aluno SET nome = ?, dataNascimento = ?, telefone = ?, cpf = ? WHERE matricula = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, nome);
+            ps.setString(2, dataFormatada);
+            ps.setString(3, telefone);
+            ps.setString(4, cpf);
+            ps.setString(5, matricula);
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected > 0) {
+                JOptionPane.showMessageDialog(this, "Dados atualizados com sucesso.");
+            } else {
+                JOptionPane.showMessageDialog(this, "Aluno não encontrado.");
+            }
+
+            ps.close();
+            con.close();
+
+            // Atualiza a linha da tabela (JTable)
+            DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+            for (int i = 0; i < model.getRowCount(); i++) {
+                if (model.getValueAt(i, 0).toString().equals(matricula)) {
+                    // Recalcula idade
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                    LocalDate dataNasc = LocalDate.parse(dataNascStr, formatter);
+                    int idade = Period.between(dataNasc, LocalDate.now()).getYears();
+
+                    model.setValueAt(nome, i, 1);
+                    model.setValueAt(dataNascStr, i, 2);
+                    model.setValueAt(idade, i, 3);
+                    model.setValueAt(telefone, i, 4);
+                    model.setValueAt(cpf, i, 5);
+                    break;
+                }
+            }
+
+        } catch (ParseException ex) {
+            JOptionPane.showMessageDialog(this, "Data inválida: " + ex.getMessage());
+        } catch (ClassNotFoundException | SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Erro ao atualizar: " + ex.getMessage());
+        }
+
+        /////////////
+        
+        
+        
+        
+        
+        
+        DefaultTableModel model = (DefaultTableModel) jTable1.getModel();
+        boolean alunoEncontrado = false;
+
+// Recalcula idade com base na nova data
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate dataNasc = LocalDate.parse(dataNascStr, formatter);
+        int idade = Period.between(dataNasc, LocalDate.now()).getYears();
+
+// Procura o aluno pela matrícula
+        for (int i = 0; i < model.getRowCount(); i++) {
+            String matriculaTabela = model.getValueAt(i, 0).toString();
+
+            if (matriculaTabela.equals(matricula)) {
+                // Atualiza os dados na linha existente
+                model.setValueAt(nome, i, 1);
+                model.setValueAt(dataNascStr, i, 2);
+                model.setValueAt(idade, i, 3);
+                model.setValueAt(telefone, i, 4);
+                model.setValueAt(cpf, i, 5);
+                alunoEncontrado = true;
+                break;
+            }
+        }
+
+// Se o aluno não está na tabela, adiciona nova linha
+        if (!alunoEncontrado) {
+            Object[] novaLinha = new Object[]{
+                matricula,
+                nome,
+                dataNascStr,
+                idade,
+                telefone,
+                cpf
+            };
+            model.addRow(novaLinha);
+        }
+
+        // Limpa os campos após cadastro
+        id.setText("");
+        textoNome.setText("");
+        textoDataNasc.setText("");
+        textoTelefone.setText("");
+        textoCPF.setText("");
+        campoIndice.setText("");
+
+
+    }//GEN-LAST:event_buttonAtualizarActionPerformed
+
+    private void idActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_idActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_idActionPerformed
 
     /**
      * @param args the command line arguments
@@ -510,19 +812,26 @@ public class InterfaceAluno extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton buttonAtualizar;
     private javax.swing.JButton buttonBuscar;
     private javax.swing.JButton buttonCadastro;
     private javax.swing.JButton buttonExcluir;
     private javax.swing.JButton buttonNovo;
     private javax.swing.JButton buttonVelho;
+    private javax.swing.JFormattedTextField campoIndice;
+    private javax.swing.JButton exportarTabela;
     private javax.swing.JFormattedTextField id;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblCPF;
     private javax.swing.JLabel lblDtNasc;
     private javax.swing.JLabel lblMatricula;
+    private javax.swing.JLabel lblMatricula1;
+    private javax.swing.JLabel lblMatricula2;
     private javax.swing.JLabel lblNome;
     private javax.swing.JLabel lblTelefone;
+    private javax.swing.JButton mostrarTodos;
     private javax.swing.JFormattedTextField textoCPF;
     private javax.swing.JFormattedTextField textoDataNasc;
     private javax.swing.JTextField textoNome;

@@ -2,35 +2,30 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package projetoalunopootest;
+package trabalhopoo;
+
+import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.table.DefaultTableModel;
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.JOptionPane;
-/**
- *
- * @author sergi
- */
+
 public class Aluno {
+
     private String matricula;
     private String nome;
-    private String dataNascimento;  //formato:dd/MM/aaaa
+    private String dataNascimento;  // formato: dd/MM/yyyy
     private String telefone;
     private String cpf;
-    private String Idade;
+
     
+
     public Aluno(String matricula, String nome, String dataNascimento, String telefone, String cpf) {
         this.matricula = matricula;
         this.nome = nome;
@@ -39,44 +34,84 @@ public class Aluno {
         this.cpf = cpf;
     }
 
-    // Getters
-    public String getMatricula() { return matricula; }
-    public String getNome() { return nome; }
-    public String getDataNascimento() { return dataNascimento; }
-    public String getTelefone() { return telefone; }
-    public String getCpf() { return cpf; }
+    public String toCSV() {
+        return matricula + ", " + nome + " ;" + ";" + dataNascimento + "; " + telefone + ";" + cpf;
+    }
+
     
-    /**
-     *
-     * @return
-     */
-    public String getIdade(){
-        try{
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/aaaa");
+    // Getters
+    public String getMatricula() {
+        return matricula;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getDataNascimento() {
+        return dataNascimento;
+    }
+
+    public String getTelefone() {
+        return telefone;
+    }
+
+    public String getCpf() {
+        return cpf;
+    }
+
+    // Calcula a idade a partir da data de nascimento
+    public String getIdade() {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             LocalDate nascimento = LocalDate.parse(dataNascimento, formatter);
             LocalDate hoje = LocalDate.now();
             int idade = Period.between(nascimento, hoje).getYears();
             return String.valueOf(idade);
-        }catch(Exception e){
-            return "Invalido";
+        } catch (DateTimeParseException e) {
+            return "Inválido";
         }
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Aluno aluno = (Aluno) obj;
+        return matricula != null && matricula.equals(aluno.matricula);
+    }
+
+    @Override
+    public int hashCode() {
+        return matricula != null ? matricula.hashCode() : 0;
+    }
+
+    // toString para imprimir todos os dados do aluno
+    @Override
+    public String toString() {
+        return "Matrícula: " + matricula
+                + ", Nome: " + nome
+                + ", Data de Nascimento: " + dataNascimento
+                + ", Idade: " + getIdade()
+                + ", Telefone: " + telefone
+                + ", CPF: " + cpf;
+    }
+
     
-    //Calcula a idade a partir do ano
-    public String getIdadeString(){
-        try{
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            LocalDate nascimento = LocalDate.parse(dataNascimento,formatter);
-            
-            LocalDate hoje = LocalDate.now();
-            int idade = Period.between(nascimento,hoje).getYears();
-            
-            return String.valueOf(idade);
-            
-        }catch(DateTimeParseException e){
-            return "Invalido";
-        }
-    }
+
+    
+    
+    
+    
+    
+    
+    
+    
     
     /**SALVA EM UM DOCUMENTO .TXT      INVALIDOOOOOOOOOOOOO
     public String salvar(){
@@ -100,4 +135,3 @@ public class Aluno {
         return null;
     }*/
 }
-
